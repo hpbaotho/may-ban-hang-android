@@ -1,0 +1,132 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#151515"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tv_qldm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1.5"
+            android:gravity="center_vertical"
+            android:text="THÊM MỚI DỊCH VỤ"
+            android:textColor="#FFFFFF"
+            android:textSize="30dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:paddingRight="10dp" >
+
+            <Button
+                android:id="@+id/btn_saveDM"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="#EDB366"
+                android:gravity="center_horizontal"
+                android:paddingTop="20dp"
+                android:text="Lưu Lại"
+                android:textColor="#FFFFFF" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:background="#EDB366"
+                android:paddingBottom="15dp"
+                android:paddingRight="3dp"
+                android:src="@drawable/checkmark" />
+
+            <Button
+                android:id="@+id/btn_exitThemDM"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="#B35986"
+                android:gravity="center_horizontal"
+                android:paddingTop="20dp"
+                android:text="Thoát"
+                android:textColor="#FFFFFF" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="#B35986"
+                android:paddingBottom="15dp"
+                android:paddingRight="3dp"
+                android:src="@drawable/home" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF" >
+            </TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <include layout="@layout/dm_themmoi_ttchung" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <include layout="@layout/dm_themmoi_khuvuc" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <include layout="@layout/dm_themmoi_giaca" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <include layout="@layout/dm_themmoi_in" />
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+
+</LinearLayout>

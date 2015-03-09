@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="#FFFFFF" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="1200px"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal" >
+
+                <ScrollView
+                    android:id="@+id/ScrollView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="340dp" >
+
+                    <TableLayout
+                        android:id="@+id/tableLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:shrinkColumns="*"
+                        android:stretchColumns="*" >
+                    </TableLayout>
+                </ScrollView>
+            </LinearLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:paddingRight="10dp"
+        android:layout_marginTop="10dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#A89494"
+            android:paddingBottom="15dp"
+            android:paddingRight="3dp"
+            android:src="@drawable/ic_huonglen" />
+
+        <Button
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:background="#A89494"
+            android:gravity="center_horizontal"
+            android:paddingTop="20dp"
+            android:text="BC HĐ Thanh Toán"
+            android:textColor="#FFFFFF" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:background="#A89494"
+            android:paddingBottom="15dp"
+            android:paddingRight="3dp"
+            android:src="@drawable/ic_huonglen" />
+
+        <Button
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:background="#A89494"
+            android:gravity="center_horizontal"
+            android:paddingTop="20dp"
+            android:text="BC DV Thanh Toán"
+            android:textColor="#FFFFFF" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:background="#A89494"
+            android:paddingBottom="15dp"
+            android:paddingRight="3dp"
+            android:src="@drawable/ic_huonglen" />
+
+        <Button
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:background="#A89494"
+            android:gravity="center_horizontal"
+            android:paddingTop="20dp"
+            android:text="BC DV Phát Sinh"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+</LinearLayout>
