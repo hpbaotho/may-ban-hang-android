@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item 
+        android:id="@+id/mn_xoa" 
+        android:title="Xóa Dịch Vụ" 
+        android:icon="@drawable/delete_48">
+        
+    </item>
+    <item 
+        android:id="@+id/mn_suasl" 
+        android:title="Sửa Số Lượng" 
+        android:icon="@drawable/edit_48">
+        
+    </item>
+    <item android:id="@+id/mn_chuyen" 
+        android:title="Chuyển Đi" 
+        android:icon="@drawable/arrowright_48">
+        
+    </item>
+    <item 
+        android:id="@+id/mn_giamgia" 
+        android:title="Giảm Giá" 
+        android:icon="@drawable/sale_48">
+        
+    </item>
+    
+
+</menu>

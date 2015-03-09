@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.maybanhang"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="17" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/app_name" 
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".Main_HoaDonLayNgayActivity"></activity>
+        <activity android:name=".Main_KhuVucCoDinhActivity"></activity>
+        <activity android:name=".Main_QuanLyChungActivity"></activity>
+        
+        <activity android:name=".HD_MainActivity"
+            		android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".HD_DanhMucSPActivity"></activity>
+        <activity android:name=".HD_ChiTietActivity"></activity>
+        <activity android:name=".HD_ThongTinChungActivity"></activity>
+        <activity android:name=".HD_MyArrayAdapter"></activity>
+        
+        <activity android:name=".CH_MainActivity"
+            android:windowSoftInputMode="stateHidden"></activity>
+        
+        <activity android:name=".NV_MainActivity"></activity>
+        <activity android:name=".NV_ThemMoi_Activity"
+            	android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".NV_SuaTTin_Activity"
+            	android:windowSoftInputMode="stateHidden"></activity>
+        
+        <activity android:name=".DM_MainActivity"></activity>
+        <activity android:name=".DM_SuaTT_Activity"
+            	android:windowSoftInputMode="stateHidden"></activity>
+         <activity android:name=".DM_ThemMoi_Activity"
+             	android:windowSoftInputMode="stateHidden"></activity>
+         
+         <activity android:name=".BC_MainActivity"></activity>
+         <activity android:name=".HD_ThemDV" android:theme="@android:style/Theme.Holo.Dialog"></activity>
+         <activity android:name=".HD_DvKhac" android:theme="@android:style/Theme.Holo.Dialog"></activity>
+         <activity android:name=".HD_Update_SL_KM" android:theme="@android:style/Theme.Holo.Dialog"></activity>
+         <activity android:name=".HD_ChuyenDV" android:theme="@android:style/Theme.Holo.Dialog"></activity>
+         <activity android:name=".HD_ChuyenHD" android:theme="@android:style/Theme.Holo.Dialog"></activity>
+         <activity android:name=".HD_AddFav" android:theme="@android:style/Theme.Holo.Dialog"></activity>
+    </application>
+
+</manifest>

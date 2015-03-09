@@ -1,0 +1,269 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.maybanhang.LoginActivity" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="ĐĂNG NHẬP HỆ THỐNG"
+        android:layout_marginTop="20dp"
+        android:textColor="#000000"
+        android:textSize="35dp" />
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo"/>
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DOOP.VN"
+            android:textSize="25dp"
+            android:layout_marginTop="25dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal" >
+        
+        <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+            <LinearLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="72dp"
+                android:layout_marginRight="15dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:text="Tài Khoản"
+                    android:textColor="#000000"
+                    android:textSize="20dp"
+                    android:gravity="center_vertical" />
+
+                <Spinner
+                    android:id="@+id/sp_user"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="72dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:text="Mật Khẩu"
+                    android:textColor="#000000"
+                    android:textSize="20dp"
+                    android:gravity="center_vertical" />
+
+                <EditText
+                    android:id="@+id/edt_pass"
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent"
+                    android:hint="......"
+                    android:inputType="textPassword" />
+            </LinearLayout>
+            <LinearLayout 
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:gravity="left"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btn_login"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:paddingTop="25dp"
+                    android:background="#EDB366"
+                    android:text="Đăng Nhập"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20dp" />
+                <ImageView 
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/unlock"
+                    android:background="#EDB366"
+                    android:layout_marginRight="25dp"
+                    android:paddingBottom="15dp"
+                    android:paddingRight="3dp"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"/>
+
+                <Button 
+                    android:id="@+id/btn_exit"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:paddingTop="25dp"
+                    android:text="Thoát"
+                    android:textSize="20dp"
+                    android:textColor="#FFFFFF"
+                    android:background="#B35986"/>
+                <ImageView 
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/home"
+                    android:background="#B35986"
+                    android:layout_marginRight="5dp"
+                    android:paddingBottom="15dp"
+                    android:paddingRight="3dp"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/btn_one"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/one"
+                    android:scaleX="1.2"
+                    android:scaleY="1.2" />
+
+                <Button
+                    android:id="@+id/btn_two"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/two"
+                    android:scaleX="1.2"
+                    android:scaleY="1.2"  />
+
+                <Button
+                    android:id="@+id/btn_three"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/three" 
+                    android:scaleX="1.2"
+                    android:scaleY="1.2" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/btn_four"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/four"
+                    android:scaleX="1.2"
+                    android:scaleY="1.2"  />
+
+                <Button
+                    android:id="@+id/btn_five"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/five"
+                    android:scaleX="1.2"
+                    android:scaleY="1.2"  />
+
+                <Button
+                    android:id="@+id/btn_six"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/six"
+                    android:scaleX="1.2"
+                    android:scaleY="1.2"  />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/btn_seven"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/seven" 
+                    android:scaleX="1.2"
+                    android:scaleY="1.2" />
+
+                <Button
+                    android:id="@+id/btn_eight"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/eight" 
+                    android:scaleX="1.2"
+                    android:scaleY="1.2" />
+
+                <Button
+                    android:id="@+id/btn_nine"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/nine"
+                    android:scaleX="1.2"
+                    android:scaleY="1.2"  />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+<TextView 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/tv_login"
+    android:gravity="center"
+    android:layout_marginTop="5dp"
+    android:textColor="#FF0000"/>
+</LinearLayout>
