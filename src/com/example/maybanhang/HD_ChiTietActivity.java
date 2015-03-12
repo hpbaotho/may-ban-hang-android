@@ -58,6 +58,8 @@ public class HD_ChiTietActivity extends Activity {
 
 	private DatabaseHandler database = new DatabaseHandler(this);
 	DecimalFormat formatMoney = new DecimalFormat("#,###,##0");
+	
+	public static int isCauhinh = 0;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -174,11 +176,51 @@ public class HD_ChiTietActivity extends Activity {
 									HD_HoaDon hoadon = database.getHoaDon(HD_MainActivity.hd_id);
 									hoadon.setTrangThai("DaTT");
 									database.updateHoaDon(hoadon);
-									Intent intent = new Intent(
-											HD_ChiTietActivity.this,
-											MainActivity.class);
-									startActivity(intent);
-									finish();
+									
+									if(isCauhinh == 1)
+									{
+										Intent myIntent = new Intent(HD_ChiTietActivity.this, Printer_Handle.class);
+										Bundle bd = new Bundle();
+										bd.putString("action", "Print");
+										bd.putInt("id", HD_MainActivity.hd_id);
+										bd.putString("khuvuc", HD_MainActivity.khuvuc);
+										bd.putString("tdbd", HD_MainActivity.tdBD);
+										bd.putString("hoadon", 
+												"Thao Trang Spa            NVPV: " + MainActivity.username + "\n"
+							                    +"So 20, Cau Giay, Ha Noi   NVTN: " + MainActivity.username + "\n"
+							                    +"Tel: 01688975245          http://thaotrangspa.vn\n"
+							                    +"thaotrangspa@gmail.com    Ma HD: " + HD_MainActivity.hd_id +"\n"
+							                    +"------------------------------------------------\n\n"
+							                    +"              HOA DON "+ HD_MainActivity.khuvuc.toUpperCase() + "\n"
+							                    +"Ma the: KL\n"
+							                    +"Ten chu the: Khach le\n\n"
+							                    +"Gio bat dau:  22:38:09 08/Sep/2014\n"
+							                    +"Gio ket thuc: 21:31:42 08/Sep/2014\n\n"
+							                    +"       DANH SACH DICH VU SU DUNG\n\n"
+							                    +"Ten DV       SL      D.Gia    KM(%)    T.Tien\n"
+							                    +"------------------------------------------------\n"
+							                    +"Bot cung     1       20.000            20.000\n"
+							                    +"Cat toc      1       30.000            30.000\n"
+							                    +"Goi dau      1       50.000            50.000\n"
+							                    +"------------------------------------------------\n"
+							                    +"                       Tong tien:     100.000\n"
+							                    +"                       Chiet khau(%): 0\n"
+							                    +"			THANH TIEN: 100.000vnd\n"
+							                    +"			Mot tram ngan dong\n\n"
+							                    +"Ghi chu: Don gia da bao gom VAT\n\n"
+							                    +"********Han hanh phuc vu quy khach!*********");
+										
+										myIntent.putExtra("data", bd);
+										startActivity(myIntent);
+										finish();
+									}
+									
+									
+//									Intent intent = new Intent(
+//											HD_ChiTietActivity.this,
+//											MainActivity.class);
+//									startActivity(intent);
+//									finish();
 								}
 							});
 					b.setNegativeButton("Thoát",

@@ -33,7 +33,7 @@ public class HD_MainActivity extends TabActivity{
 	public static EditText edt_khuvucHD, edt_maHD, edt_thunganHD,edt_nhanvienHD;
 	public String username;
 	public static String khuvuc;
-	public String tdBD;
+	public static String tdBD;
 	public static int hd_id;
 	
 	private DatabaseHandler database = new DatabaseHandler(this);
