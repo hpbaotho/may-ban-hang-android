@@ -34,6 +34,7 @@
             android:paddingRight="10dp" >
 
             <Button
+                android:id="@+id/btn_saveConfig"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:background="#EDB366"
@@ -52,6 +53,7 @@
                 android:src="@drawable/checkmark" />
 
             <Button
+                android:id="@+id/btn_connectPrinter"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:background="#1CA9F9"
@@ -70,7 +72,7 @@
                 android:src="@drawable/medium_connection" />
 
             <Button
-                android:id="@+id/ch_exit"
+                android:id="@+id/btn_exitConfig"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:background="#B35986"

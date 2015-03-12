@@ -3,9 +3,15 @@ package com.example.maybanhang;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import com.zj.usbsdk.UsbController;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,10 +26,10 @@ import android.widget.Toast;
 public class CH_MainActivity extends Activity {
 
 	private TextView tv_time, tv_sologun;
-	private Button ch_exit;
+	private Button btn_saveConfig, btn_connectPrinter, btn_exitConfig;
 	
-	private String mayinhd_arr[] = {"Microsoft XPS Document Write","Fax","Không Sử Dụng"};
-	private String khogiay_mihd1_arr[] = {"A4","A5"};
+	private String mayinhd_arr[] = {"Máy in 1","Máy in 2","Máy in 3"};
+	private String khogiay_mihd1_arr[] = {"80mm","58mm"};
 	private String  khogiay_mihd2_arr[] = {"K80","K57"};
 	private String solien_arr[] = {"1","2","3","4"};
 	
@@ -37,6 +43,7 @@ public class CH_MainActivity extends Activity {
 	private Spinner sp_MIHD1, sp_MIHD1_KGiay, sp_MIHD1_SLien, sp_MIHD2, sp_MIHD2_KGiay, sp_MIHD2_SLien;
 	private Spinner sp_MIBa, sp_MIBa_SLBa, sp_MIBa_SLTN, sp_MIBe, sp_MIBe_SLBe, sp_MIBe_SLTN;
 	private Spinner sp_tdk, sp_tdk_td, sp_tdk_tr;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +54,8 @@ public class CH_MainActivity extends Activity {
 	   //set content view AFTER ABOVE sequence (to avoid crash)
 		this.setContentView(R.layout.setting_main);
 	    
+	
+		
 	    //setting may in hoa don
 	    sp_MIHD1 = (Spinner)findViewById(R.id.sp_MIHD1);
 	    sp_MIHD2 = (Spinner)findViewById(R.id.sp_MIHD2);
@@ -55,7 +64,9 @@ public class CH_MainActivity extends Activity {
 	    sp_MIHD1_SLien = (Spinner)findViewById(R.id.sp_MIHD1_SLien);
 	    sp_MIHD2_SLien = (Spinner)findViewById(R.id.sp_MIHD2_SLien);
 	    
-	    ch_exit = (Button)findViewById(R.id.ch_exit);
+	    btn_saveConfig = (Button)findViewById(R.id.btn_saveConfig);
+	    btn_connectPrinter = (Button)findViewById(R.id.btn_connectPrinter);
+	    btn_exitConfig = (Button)findViewById(R.id.btn_exitConfig);
 	    
 	    ArrayAdapter<String> mihd1_adt = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, mayinhd_arr);
@@ -146,14 +157,35 @@ public class CH_MainActivity extends Activity {
 	    sp_tdk_tr.setAdapter(tdk_tr_adt);
 	    		
 		loadTabs();
+		
+		btn_saveConfig.setOnClickListener(new MyEvent());
+		btn_connectPrinter.setOnClickListener(new MyEvent());
+		btn_exitConfig.setOnClickListener(new MyEvent());
+
 	}
-	
+
+	  
 	private class MyEvent implements OnClickListener {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
+			
 			switch (v.getId()) {
-			case R.id.ch_exit:
+			case R.id.btn_saveConfig:
+				//finish();
+				break;
+			case R.id.btn_connectPrinter:
+				HD_ChiTietActivity.isCauhinh = 1;
+				Toast.makeText(CH_MainActivity.this, "Connected to printer!",
+			              Toast.LENGTH_SHORT).show();
+//				Intent myIntent = new Intent(CH_MainActivity.this, Printer_Handle.class);
+//				Bundle bd = new Bundle();
+//				bd.putString("action", "CauHinh");
+//				myIntent.putExtra("data", bd);
+//				startActivity(myIntent);
+//				finish();
+				break;
+			case R.id.btn_exitConfig:
 				finish();
 				break;
 			default:
@@ -162,6 +194,7 @@ public class CH_MainActivity extends Activity {
 		}
 	}
 
+	
 	// Cấu hình tab
 	public void loadTabs() {
 
