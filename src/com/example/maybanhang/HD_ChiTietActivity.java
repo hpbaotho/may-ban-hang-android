@@ -1,16 +1,24 @@
 package com.example.maybanhang;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zj.usbsdk.UsbController;
+
+import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.Html;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
@@ -59,12 +67,31 @@ public class HD_ChiTietActivity extends Activity {
 	private DatabaseHandler database = new DatabaseHandler(this);
 	DecimalFormat formatMoney = new DecimalFormat("#,###,##0");
 	
+	public static String hoadonInfo;
 	public static int isCauhinh = 0;
+	
+	private int[][] u_infor;
+    UsbController  usbCtrl = null;
+    UsbDevice dev = null;
 
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.hd_hoadon_chitiet);
-
+		
+		usbCtrl = new UsbController(this,mHandler);
+		u_infor = new int[4][2];
+		u_infor[0][0] = 0x1CBE;
+		u_infor[0][1] = 0x0003;
+		u_infor[1][0] = 0x1CB0;
+		u_infor[1][1] = 0x0003;
+		u_infor[2][0] = 0x0483;
+		u_infor[2][1] = 0x5740;
+		//u_infor[3][0] = 0x0493;
+		//u_infor[3][1] = 0x8760;
+		u_infor[3][0] = 0x0416;
+		u_infor[3][1] = 0x5011;
+		
 		table = (TableLayout) findViewById(R.id.tableLayout);
 		btn_thanhtoanHD = (Button) findViewById(R.id.btn_thanhtoanHd);
 		btn_xoaDvHd = (Button) findViewById(R.id.btn_xoaDvHd);
@@ -136,7 +163,53 @@ public class HD_ChiTietActivity extends Activity {
 			}
 		});
 	}
-
+	
+	/*------------------PRINTER----------------------*/
+	public boolean CheckUsbPermission(){
+		if( dev != null ){
+			if( usbCtrl.isHasPermission(dev)){
+				return true;
+			}
+		}
+//		Toast.makeText(getApplicationContext(), "USB device can not access, please re-connect",
+//              Toast.LENGTH_SHORT).show();
+  	return false;
+	}
+	
+	  private final  Handler mHandler = new Handler() {
+			@Override
+	        public void handleMessage(Message msg) {
+	            switch (msg.what) {
+	            case UsbController.USB_CONNECTED:
+//	            	Toast.makeText(getApplicationContext(), "Obtaining USB device access permissions success",
+//	                        Toast.LENGTH_SHORT).show();
+	            	break;
+	            default:
+	            	break;
+	            }
+	        }
+	    };
+	    
+	    public void connectPrinter(){
+			//usbCtrl.close();
+			int  i = 0;
+			for( i = 0 ; i < 4 ; i++ ){
+				dev = usbCtrl.getDev(u_infor[i][0],u_infor[i][1]);
+				if(dev != null)
+					break;
+			}
+			
+			if( dev != null ){
+				if( !(usbCtrl.isHasPermission(dev))){;
+					usbCtrl.getPermission(dev);
+				}else{
+//	            	Toast.makeText(this, "Obtaining USB device access permissions success",
+//	                        Toast.LENGTH_SHORT).show();
+				}
+			}
+	 }
+	    /*------------------PRINTER----------------------*/
+	    
 	private class MyEvent implements OnClickListener {
 		@Override
 		public void onClick(View v) {
@@ -164,7 +237,7 @@ public class HD_ChiTietActivity extends Activity {
 					AlertDialog.Builder b = new AlertDialog.Builder(
 							HD_ChiTietActivity.this);
 					b.setTitle("Thông báo");
-					b.setMessage("Bạn có chắc chắn muốn thanh toán hóa đơn?");
+					b.setMessage("Bạn có chắc chắn muốn thanh toán hóa đơn?\n");
 					b.setPositiveButton("Đồng ý",
 							new DialogInterface.OnClickListener() {
 	
@@ -173,54 +246,102 @@ public class HD_ChiTietActivity extends Activity {
 										int which) {
 									// TODO Auto-generated method stub
 	//								database.deleteHoaDon(HD_MainActivity.hd_id);
+									SimpleDateFormat sdfw = new SimpleDateFormat("dd/MM/yyyy   HH:mm a");
 									HD_HoaDon hoadon = database.getHoaDon(HD_MainActivity.hd_id);
 									hoadon.setTrangThai("DaTT");
+									hoadon.setTdKetThuc(sdfw.format(MainActivity.calendar.getTime()));
 									database.updateHoaDon(hoadon);
+									CN_ChiNhanh chinhanhs = database.getCNbyName(Main_KhuVucCoDinhActivity.chiNhanh);
 									
-									if(isCauhinh == 1)
+									if(isCauhinh == 0)
 									{
-										Intent myIntent = new Intent(HD_ChiTietActivity.this, Printer_Handle.class);
-										Bundle bd = new Bundle();
-										bd.putString("action", "Print");
-										bd.putInt("id", HD_MainActivity.hd_id);
-										bd.putString("khuvuc", HD_MainActivity.khuvuc);
-										bd.putString("tdbd", HD_MainActivity.tdBD);
-										bd.putString("hoadon", 
-												"Thao Trang Spa            NVPV: " + MainActivity.username + "\n"
-							                    +"So 20, Cau Giay, Ha Noi   NVTN: " + MainActivity.username + "\n"
-							                    +"Tel: 01688975245          http://thaotrangspa.vn\n"
-							                    +"thaotrangspa@gmail.com    Ma HD: " + HD_MainActivity.hd_id +"\n"
-							                    +"------------------------------------------------\n\n"
-							                    +"              HOA DON "+ HD_MainActivity.khuvuc.toUpperCase() + "\n"
-							                    +"Ma the: KL\n"
-							                    +"Ten chu the: Khach le\n\n"
-							                    +"Gio bat dau:  22:38:09 08/Sep/2014\n"
-							                    +"Gio ket thuc: 21:31:42 08/Sep/2014\n\n"
-							                    +"       DANH SACH DICH VU SU DUNG\n\n"
-							                    +"Ten DV       SL      D.Gia    KM(%)    T.Tien\n"
-							                    +"------------------------------------------------\n"
-							                    +"Bot cung     1       20.000            20.000\n"
-							                    +"Cat toc      1       30.000            30.000\n"
-							                    +"Goi dau      1       50.000            50.000\n"
-							                    +"------------------------------------------------\n"
-							                    +"                       Tong tien:     100.000\n"
-							                    +"                       Chiet khau(%): 0\n"
-							                    +"			THANH TIEN: 100.000vnd\n"
-							                    +"			Mot tram ngan dong\n\n"
-							                    +"Ghi chu: Don gia da bao gom VAT\n\n"
-							                    +"********Han hanh phuc vu quy khach!*********");
+										byte isHasPaper;
+										connectPrinter();
+										isHasPaper = usbCtrl.revByte(dev);
+										byte[] cmd = new byte[4];
+										if( isHasPaper == 0x38 ){
+											Toast.makeText(getApplicationContext(), "The printer has no paper",
+							                     Toast.LENGTH_SHORT).show();
+											return;
+										}
+										String listDV = "";
+										String temp = "                                                          ";
+										for (int i = 0; i < arr_dichvu.size(); i++) {
+											listDV = listDV + "\n"
+													+ arr_dichvu.get(i).getTenDV() + temp.substring(0, 20 - arr_dichvu.get(i).getTenDV().length())
+													+ arr_dichvu.get(i).getSoLuong() + temp.substring(0, 3 - arr_dichvu.get(i).getSoLuong().length())
+													+ formatMoney.format(Integer.parseInt(arr_dichvu.get(i).getDonGiaBan())) + temp.substring(0, 9 - arr_dichvu.get(i).getDonGiaBan().length())
+													+ arr_dichvu.get(i).getFtGiaGia() + temp.substring(0, 6 - arr_dichvu.get(i).getFtGiaGia().length())
+													+ formatMoney.format(Integer.parseInt(arr_dichvu.get(i).getSoLuong())*Integer.parseInt(arr_dichvu.get(i).getDonGiaBan()));
+										}
 										
-										myIntent.putExtra("data", bd);
-										startActivity(myIntent);
-										finish();
+										String ttHD_Header =
+												chinhanhs.getTenCN() + temp.substring(0, 32 - chinhanhs.getTenCN().length())
+												+"NVPV: " + MainActivity.username + "\n"
+							                    +chinhanhs.getDiaChi() + temp.substring(0, 32 - chinhanhs.getDiaChi().length())
+							                    +"NVTN: " + MainActivity.username + "\n"
+							                    +"Tel: " + chinhanhs.getSoDT() + temp.substring(0, 27 - chinhanhs.getSoDT().length()) 
+							                    +"Ma HD: " + HD_MainActivity.hd_id +"\n"
+							                    +"Web: " + chinhanhs.getThongTinKhac() + "\n"
+							                    +"Email: thaotrangspa@gmail.com\n"       
+							                    +"------------------------------------------------\n";
+										String ttHD_Title = "              HOA DON "+ HD_MainActivity.khuvuc.toUpperCase() + "\n";
+							            String ttHD_Detail = "Ma the: KL\n"
+							                    +"Ten chu the: Khach le\n\n"
+							                    +"Gio bat dau: " + hoadon.getTdBatDau() + "\n"
+							                    +"Gio ket thuc: " + hoadon.getTdKetThuc() + "\n\n"
+							                    +"       DANH SACH DICH VU SU DUNG\n\n"
+							                    +"Ten DV              SL D.Gia     KM(%) T.Tien\n"
+							                    +"------------------------------------------------"
+							                    + listDV
+							                    +"\n------------------------------------------------\n"
+							                    +"                       Tong tien:     " + formatMoney.format(tongTien_codinh) + "\n"
+							                    +"                       Chiet khau:    " + hoadon.getFtDieuChinh()+ "\n";
+							            String ttHD_Sum = "			Thanh tien: " + formatMoney.format(tongTien_giamgia) + "\n";
+							            String ttHD_SumText = "			" + convertNumberToString(tongTien_giamgia) + "\n\n";
+							            String ttHD_Footer = "Ghi chu: Don gia da bao gom VAT\n\n"
+							                    +"********Han hanh phuc vu quy khach!*********";
+											if( CheckUsbPermission() == true ){
+									         	cmd[0]=0x1B;
+									            cmd[1]=0x42;
+									            cmd[2]=0x04;
+									            cmd[3]=0x01;                          
+									            usbCtrl.sendByte(cmd, dev);	
+									             
+									         	usbCtrl.sendMsg(ttHD_Header, "GBK", dev);
+									         	
+									         	cmd[0]=0x1b;
+								                cmd[1]=0x21;
+								                cmd[2]=0x04;
+								                cmd[3]=0x01;  
+									         	cmd[2] |= 0x10;
+							            		usbCtrl.sendByte(cmd, dev);  
+							            		usbCtrl.sendMsg(ttHD_Title, "GBK", dev);
+							            		cmd[2] &= 0xEF;        
+							            		usbCtrl.sendByte(cmd, dev);
+							            		
+							            		usbCtrl.sendMsg(ttHD_Detail, "GBK", dev);
+							            		
+							            		cmd[0]=0x1b;
+								                cmd[1]=0x21;
+								                cmd[2]=0x04;
+								                cmd[3]=0x01;  
+									         	cmd[2] |= 0x10;
+							            		usbCtrl.sendByte(cmd, dev);  
+							            		usbCtrl.sendMsg(ttHD_Sum, "GBK", dev);
+							            		cmd[2] &= 0xEF;        
+							            		usbCtrl.sendByte(cmd, dev);
+							            		
+							            		usbCtrl.sendMsg(ttHD_SumText, "GBK", dev);
+							            		usbCtrl.sendMsg(ttHD_Footer, "GBK", dev);
+							            		
+									         	cmd[0]=0x1D;
+												cmd[1]=0x56;
+												cmd[2]=0x42;
+												cmd[3]=90;                        
+												usbCtrl.sendByte(cmd, dev);  
+									         }
 									}
-									
-									
-//									Intent intent = new Intent(
-//											HD_ChiTietActivity.this,
-//											MainActivity.class);
-//									startActivity(intent);
-//									finish();
 								}
 							});
 					b.setNegativeButton("Thoát",
@@ -691,8 +812,371 @@ public class HD_ChiTietActivity extends Activity {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+		}		
+	}
+	
+	private String convertNumberToString(int number)
+	{
+		String text = "";
+		String numb = number + "";
+		ArrayList<String> arr_text = new ArrayList<String>();
+		for (int i = 0; i < numb.length() - 2; i++) {
+			switch (Integer.parseInt(numb.substring(i, i+1))) {
+			case 0:
+				arr_text.add("muoi");
+				break;
+			case 1:
+				arr_text.add("mot");
+				break;
+			case 2:
+				arr_text.add("hai");
+				break;
+			case 3:
+				arr_text.add("ba");
+				break;
+			case 4:
+				arr_text.add("bon");
+				break;
+			case 5:
+				arr_text.add("nam");
+				break;
+			case 6:
+				arr_text.add("sau");
+				break;
+			case 7:
+				arr_text.add("bay");
+				break;
+			case 8:
+				arr_text.add("tam");
+				break;
+			case 9:
+				arr_text.add("chin");
+				break;
+			default:
+				break;
+			}
+		}
+		if(numb.length() == 8)
+		{
+//			10....
+			if(arr_text.get(0).contains("mot") && arr_text.get(1).contains("muoi"))
+			{
+				text = "muoi trieu ";
+				if(arr_text.get(2).contains("muoi") && arr_text.get(3).contains("muoi")	&& arr_text.get(4).contains("muoi"))
+					text = "muoi trieu dong chan";
+				
+				else if(arr_text.get(3).contains("muoi")	&& arr_text.get(4).contains("muoi"))
+					text = text + arr_text.get(2) + " tram ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi") && arr_text.get(4).contains("muoi"))
+					text = text + "khong tram " + arr_text.get(3) + " muoi ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi") && arr_text.get(3).contains("muoi"))
+					text = text + "khong tram linh " + arr_text.get(2) + " ngan dong";
+				
+				else if(arr_text.get(4).contains("muoi"))
+					text = text + arr_text.get(2) + " tram " + arr_text.get(3) + " muoi ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi"))
+					text = text + "khong tram " + arr_text.get(3) + " muoi " + arr_text.get(4) + " ngan dong";
+				
+				else if(arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(2) + " linh " + arr_text.get(4) + " ngan dong";
+				
+				else if(arr_text.get(3).contains("mot"))
+					text = text + arr_text.get(2) + " tram  muoi " + arr_text.get(4) + " ngan dong";
+				
+				else if(arr_text.get(4).contains("muoi"))
+					text = text + arr_text.get(2) + " tram " + arr_text.get(3) + "muoi mot ngan dong";
+				
+				else if(arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(2) + " tram " + arr_text.get(3) + " muoi " + arr_text.get(4) + " ngan dong";
+				
+				text = text.substring(0, 1).toUpperCase() + text.substring(1);
+				return text;
+			}
+			
+//			12...
+			else if(arr_text.get(0).contains("mot") && !arr_text.get(1).contains("muoi"))
+			{
+				text = "muoi " + arr_text.get(1) + " trieu ";
+				if(arr_text.get(2).contains("muoi") && arr_text.get(3).contains("muoi")	&& arr_text.get(4).contains("muoi"))
+					text = text + " dong chan";
+				
+				else if(arr_text.get(3).contains("muoi") && arr_text.get(4).contains("muoi"))
+					text = text + arr_text.get(2) + " tram ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi") && arr_text.get(4).contains("muoi"))
+					text = text + "khong tram " + arr_text.get(3) + " muoi ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi") && arr_text.get(3).contains("muoi"))
+					text = text + "khong tram linh " + arr_text.get(2) + " ngan dong";
+				
+				else if(arr_text.get(4).contains("muoi"))
+					text = text + arr_text.get(2) + " tram " + arr_text.get(3) + " muoi ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi"))
+					text = text + "khong tram " + arr_text.get(3) + " muoi " + arr_text.get(4) + " ngan dong";
+				
+				else if(arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(2) + " linh " + arr_text.get(4) + " ngan dong";
+				
+				else if(arr_text.get(3).contains("mot"))
+					text = text + arr_text.get(2) + " tram  muoi " + arr_text.get(4) + " ngan dong";
+				
+				else if(arr_text.get(4).contains("muoi"))
+					text = text + arr_text.get(2) + " tram " + arr_text.get(3) + "muoi mot ngan dong";
+				
+				else if(arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(2) + " tram " + arr_text.get(3) + " muoi " + arr_text.get(4) + " ngan dong";
+				
+				text = text.substring(0, 1).toUpperCase() + text.substring(1);
+				return text;
+			}
+			
+//			21...
+			else if(arr_text.get(1).contains("mot"))
+			{
+				text = arr_text.get(0) + " muoi mot trieu";
+				if(arr_text.get(2).contains("muoi") && arr_text.get(3).contains("muoi")	&& arr_text.get(4).contains("muoi"))
+					text = text + " dong chan";
+				
+				else if(arr_text.get(3).contains("muoi") && arr_text.get(4).contains("muoi"))
+					text = text + arr_text.get(2) + " tram ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi") && arr_text.get(4).contains("muoi"))
+					text = text + "khong tram " + arr_text.get(3) + " muoi ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi") && arr_text.get(3).contains("muoi"))
+					text = text + "khong tram linh " + arr_text.get(2) + " ngan dong";
+				
+				else if(arr_text.get(4).contains("muoi"))
+					text = text + arr_text.get(2) + " tram " + arr_text.get(3) + " muoi ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi"))
+					text = text + "khong tram " + arr_text.get(3) + " muoi " + arr_text.get(4) + " ngan dong";
+				
+				else if(arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(2) + " linh " + arr_text.get(4) + " ngan dong";
+				
+				else if(arr_text.get(3).contains("mot"))
+					text = text + arr_text.get(2) + " tram  muoi " + arr_text.get(4) + " ngan dong";
+				
+				else if(arr_text.get(4).contains("muoi"))
+					text = text + arr_text.get(2) + " tram " + arr_text.get(3) + "muoi mot ngan dong";
+				
+				else if(arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(2) + " tram " + arr_text.get(3) + " muoi " + arr_text.get(4) + " ngan dong";
+				
+				text = text.substring(0, 1).toUpperCase() + text.substring(1);
+				return text;
+			}
+			
+			else
+			{
+				text = arr_text.get(0) + " muoi " + arr_text.get(1) + " trieu";
+				if(arr_text.get(2).contains("muoi") && arr_text.get(3).contains("muoi")	&& arr_text.get(4).contains("muoi"))
+					text = text + " dong chan";
+				
+				else if(arr_text.get(3).contains("muoi") && arr_text.get(4).contains("muoi"))
+					text = text + arr_text.get(2) + " tram ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi") && arr_text.get(4).contains("muoi"))
+					text = text + "khong tram " + arr_text.get(3) + " muoi ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi") && arr_text.get(3).contains("muoi"))
+					text = text + "khong tram linh " + arr_text.get(2) + " ngan dong";
+				
+				else if(arr_text.get(4).contains("muoi"))
+					text = text + arr_text.get(2) + " tram " + arr_text.get(3) + " muoi ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi"))
+					text = text + "khong tram " + arr_text.get(3) + " muoi " + arr_text.get(4) + " ngan dong";
+				
+				else if(arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(2) + " linh " + arr_text.get(4) + " ngan dong";
+				
+				else if(arr_text.get(3).contains("mot"))
+					text = text + arr_text.get(2) + " tram  muoi " + arr_text.get(4) + " ngan dong";
+				
+				else if(arr_text.get(4).contains("muoi"))
+					text = text + arr_text.get(2) + " tram " + arr_text.get(3) + "muoi mot ngan dong";
+				
+				else if(arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(2) + " tram " + arr_text.get(3) + " muoi " + arr_text.get(4) + " ngan dong";
+				
+				text = text.substring(0, 1).toUpperCase() + text.substring(1);
+				return text;
+			}
 		}
 		
-	}
+		if(numb.length() == 7)
+		{
+			if(arr_text.get(4).contains("muoi"))
+			{
+				text = arr_text.get(0) + " trieu ";
+				if(arr_text.get(1).contains("muoi") && arr_text.get(2).contains("muoi")	&& arr_text.get(3).contains("muoi"))
+					text = text + "dong chan";
+				
+				else if(arr_text.get(2).contains("muoi")	&& arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(1) + " tram ngan dong";
+				
+				else if(arr_text.get(1).contains("muoi") && arr_text.get(3).contains("muoi"))
+					text = text + "khong tram " + arr_text.get(2) + " muoi ngan dong";
+				
+				else if(arr_text.get(1).contains("muoi") && arr_text.get(2).contains("muoi"))
+					text = text + "khong tram linh " + arr_text.get(2) + " ngan dong";
+				
+				else if(arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(1) + " tram " + arr_text.get(2) + " muoi ngan dong";
+				
+				else if(arr_text.get(1).contains("muoi"))
+					text = text + "khong tram " + arr_text.get(2) + " muoi " + arr_text.get(3) + " ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi"))
+					text = text + arr_text.get(1) + " linh " + arr_text.get(3) + " ngan dong";
+				
+				else if(arr_text.get(2).contains("mot"))
+					text = text + arr_text.get(1) + " tram  muoi " + arr_text.get(3) + " ngan dong";
+				
+				else if(arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(1) + " tram " + arr_text.get(2) + "muoi mot ngan dong";
+				
+				else if(arr_text.get(2).contains("muoi"))
+					text = text + arr_text.get(1) + " tram " + arr_text.get(2) + " muoi " + arr_text.get(3) + " ngan dong";
+				
+				else
+					text = text + arr_text.get(1) +  " tram " + arr_text.get(2) + " muoi " + arr_text.get(3) + " ngan dong";
+			}
+			else
+			{
+				text = arr_text.get(0) + " trieu ";
+				if(arr_text.get(1).contains("muoi") && arr_text.get(2).contains("muoi")	&& arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(4) + " tram dong";
+				
+				else if(arr_text.get(2).contains("muoi") && arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(1) + " tram ngan " + arr_text.get(4) + " tram dong";
+				
+				else if(arr_text.get(1).contains("muoi") && arr_text.get(3).contains("muoi"))
+					text = text + "khong tram " + arr_text.get(2) + " muoi ngan " + arr_text.get(4) + "tram dong";
+				
+				else if(arr_text.get(1).contains("muoi") && arr_text.get(2).contains("muoi"))
+					text = text + "khong tram linh " + arr_text.get(2) + " ngan " +  arr_text.get(4) + " tram dong";
+				
+				else if(arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(1) + " tram " + arr_text.get(2) + " muoi ngan " + arr_text.get(4) + " tram dong";
+				
+				else if(arr_text.get(1).contains("muoi"))
+					text = text + "khong tram " + arr_text.get(2) + " muoi " + arr_text.get(3) + " ngan " + arr_text.get(4) + "tram dong";
+				
+				else if(arr_text.get(2).contains("muoi"))
+					text = text + arr_text.get(1) + "tram linh " + arr_text.get(3) + " ngan " + arr_text.get(4) + " tram dong";
+				
+				else if(arr_text.get(2).contains("mot"))
+					text = text + arr_text.get(1) + " tram  muoi " + arr_text.get(3) + " ngan " + arr_text.get(4) + " tram dong";
+				
+				else if(arr_text.get(3).contains("muoi"))
+					text = text + arr_text.get(1) + " tram " + arr_text.get(2) + "muoi mot ngan " + arr_text.get(4) + " tram dong";
+				
+				else if(arr_text.get(2).contains("muoi"))
+					text = text + arr_text.get(1) + " tram " + arr_text.get(2) + " muoi " + arr_text.get(3) + " ngan " + arr_text.get(4) + " tram dong";
+				
+				else
+					text = text + arr_text.get(1) +  " tram " + arr_text.get(2) + " muoi " + arr_text.get(3) + " ngan " + arr_text.get(4) + " tram dong";
 
+			}
+						
+			text = text.substring(0, 1).toUpperCase() + text.substring(1);
+			return text;
+		}
+		
+		if(numb.length() == 6)
+		{
+			if(arr_text.get(3).contains("muoi"))
+			{
+				text = arr_text.get(0) + " tram ";
+				if(arr_text.get(1).contains("muoi") && arr_text.get(2).contains("muoi"))
+					text = text + "ngan dong chan";
+				
+				else if(arr_text.get(2).contains("muoi"))
+					text = text + arr_text.get(1) + " muoi ngan dong";
+				
+				else if(arr_text.get(1).contains("muoi"))
+					text = text + "linh " + arr_text.get(2) + " ngan dong";
+				
+				else if(arr_text.get(1).contains("mot"))
+					text = text + "muoi " + arr_text.get(2) + " ngan dong";
+				
+				else
+					text = text + arr_text.get(1) + " muoi " + arr_text.get(2) + " ngan dong";
+			}
+			else
+			{
+				text = arr_text.get(0) + " tram ";
+				if(arr_text.get(1).contains("muoi") && arr_text.get(2).contains("muoi"))
+					text = text + "ngan " + arr_text.get(3) + " tram dong";
+				
+				else if(arr_text.get(2).contains("muoi"))
+					text = text + arr_text.get(1) + " muoi ngan " + arr_text.get(3) + " tram dong";
+				
+				else if(arr_text.get(1).contains("muoi"))
+					text = text + "linh " + arr_text.get(2) + " ngan " + arr_text.get(3) + " tram dong";
+				
+				else if(arr_text.get(1).contains("mot"))
+					text = text + "muoi " + arr_text.get(2) + " ngan " + arr_text.get(3) + " tram dong";
+				
+				else
+					text = text + arr_text.get(1) + " muoi " + arr_text.get(2) + " ngan " + arr_text.get(3) + " tram dong";
+			}
+			
+			text = text.substring(0, 1).toUpperCase() + text.substring(1);
+			return text;
+		}
+		
+		if(numb.length() == 5)
+		{
+			if(arr_text.get(2).contains("muoi"))
+			{
+				if(arr_text.get(0).contains("mot"))
+				{
+					text = "muoi ";
+					if(arr_text.get(1).contains("muoi"))
+						text = text + "ngan dong chan";
+					else
+						text = text + arr_text.get(1) + " ngan dong";
+				}
+				else if(!arr_text.get(0).contains("mot") && arr_text.get(1).contains("mot"))
+					text = arr_text.get(0) + " muoi mot ngan dong";
+				
+				else if(!arr_text.get(0).contains("mot") && arr_text.get(1).contains("muoi"))
+					text = arr_text.get(0) + " muoi ngan dong";
+				
+				else
+					text = arr_text.get(0) + " muoi " + arr_text.get(1) + " ngan dong";
+			}
+			else
+			{
+				if(arr_text.get(0).contains("mot"))
+				{
+					text = "muoi ";
+					if(arr_text.get(1).contains("muoi"))
+						text = text + "ngan " + arr_text.get(2) + " tram dong";
+					else
+						text = text + arr_text.get(1) + " ngan " + arr_text.get(2) + " tram dong";
+				}
+				else if(!arr_text.get(0).contains("mot") && arr_text.get(1).contains("mot"))
+					text = arr_text.get(0) + " muoi mot ngan " + arr_text.get(2) + " tram dong";
+				
+				else if(!arr_text.get(0).contains("mot") && arr_text.get(1).contains("muoi"))
+					text = arr_text.get(0) + " muoi ngan" + arr_text.get(2) +" tram dong";
+				
+				else
+					text = arr_text.get(0) + " muoi " + arr_text.get(1) + " ngan " + arr_text.get(2) + " tram dong";
+			}
+						
+			text = text.substring(0, 1).toUpperCase() + text.substring(1);
+			return text;
+		}
+		return text;
+	}
 }

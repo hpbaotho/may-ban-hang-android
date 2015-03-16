@@ -1865,7 +1865,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		return chinhanh;
 	}
 
-	// Getting single ctn by user
+	// Getting all chinhanh features by name
 	public CN_ChiNhanh getCNbyName(String name) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		CN_ChiNhanh chinhanh = new CN_ChiNhanh();
@@ -1884,6 +1884,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 					.getColumnIndex(CN_THONGTINKHAC)));
 			chinhanh.setCauHinh(cursor.getString(cursor
 					.getColumnIndex(CN_CAUHINH)));
+			chinhanh.setSoDT(cursor.getString(cursor
+					.getColumnIndex(CN_SODT)));
 
 			cursor.close();
 
