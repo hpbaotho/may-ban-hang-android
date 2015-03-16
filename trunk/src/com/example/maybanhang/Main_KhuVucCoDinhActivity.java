@@ -46,7 +46,8 @@ public class Main_KhuVucCoDinhActivity extends Activity {
 	private ArrayList<String> listKVChuaTT = new ArrayList<String>();
 	private String[] listKVCoDinh;
 	private ArrayList<String> listIDChuaTT = new ArrayList<String>();
-	private String chiNhanh, cauhinhCN;
+	public static String chiNhanh;
+	private String cauhinhCN;
 	private HD_HoaDon newHoaDon;
 
 	public void onCreate(Bundle savedInstanceState) {

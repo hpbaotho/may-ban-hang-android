@@ -103,6 +103,7 @@ public class LoginActivity extends Activity {
 					"Cắt tóc#Dưỡng da#Đắp mặt#Gội đầu#Tết tóc#Xông hơi#Cắt móng#Massage#Tẩm quất#Dưỡng tóc#Hấp tóc#Uốn tóc");
 			database.addNhanVien(nhanvien);
 		}
+		database.deleteAllChiNhanh();
 		if (database.getChiNhanhCount() <= 0)
 			CreateChiNhanh();
 
@@ -421,13 +422,13 @@ public class LoginActivity extends Activity {
 	private void CreateChiNhanh() {
 		CN_ChiNhanh chiNhanh = new CN_ChiNhanh(
 				"King Hair 1",
-				"Số 17, Đỗ Quang, HN",
+				"So 17, Hai Ba Trung, HN",
 				"04.3556.8889/0902189225",
 				"http://doop.vn",
 				"KvCoDinh@G.01,G.02,G.03,G.04,G.05,G.06,G.07,G.08,G.09,G.10,B.01,B.02,B.03,B.04");
 		CN_ChiNhanh chiNhanh2 = new CN_ChiNhanh(
 				"Mỹ Nguyên 1",
-				"Số 16, Ngõ 110, Trần Duy Hưng, HN",
+				"So 16, Ngo 110, Tran Duy Hung, HN",
 				"04.3784.6675/0902189225",
 				"http://doop.vn",
 				"KvCoDinh@G.01,G.02,G.03,G.04,G.05,G.06,G.07,G.08,G.09,G.10,B.01,B.02,B.03,B.04");
